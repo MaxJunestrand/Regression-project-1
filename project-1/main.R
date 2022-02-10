@@ -1,5 +1,5 @@
-install.packages("ggplot")        # Install ggplot2 package
-library("ggplot")                 # Load ggplot2 package
+install.packages("ggplot2")        # Install ggplot2 package
+library("ggplot2")                 # Load ggplot2 package
 
 # Read in data
 data <- read.csv(file = "bodyfatmen.csv")
@@ -9,6 +9,7 @@ data$residuals <- MASS::studres(fit)
 data$r.student <- rstudent(model = fit)
 
 # Normality plot of residuals
+library("ggplot2")
 CreateQQPlot <- function(data) {
   plt <- ggplot(data, aes(sample = residuals))+
     stat_qq()+
@@ -29,4 +30,19 @@ CreateFittedAgainstResidualsPlot <- function(data) {
   return(plt)
 }
 CreateFittedAgainstResidualsPlot(data)
+
+# Partial regression plots
+# hacky solution because we couldn't fit more than 9 on one image.
+library(car)  # avPlots
+CreateAddedVariablePlots <- function(fit) {
+  avPlots(fit, ~ )
+}
+CreateAddedVariablePlots(fit)
+
+CreateAddedVariablePlots <- function(fit) {
+  avPlots(fit, ~ankle + biceps + forearm + wrist )
+}
+CreateAddedVariablePlots(fit)
+
+
 
