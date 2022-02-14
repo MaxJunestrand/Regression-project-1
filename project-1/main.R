@@ -114,3 +114,10 @@ vif_v = vif(fit)
 df_multi = data[ , !(names(data) %in% c("density", "residuals", "r.student", "predicted"))]
 eigen_v = eigen(cor(df_multi))$values
 
+#Handling of outliers
+install.packages('olsrr')
+library(olsrr)
+
+ols_plot_cooksd_bar(fit)
+ols_plot_dffits(fit)
+ols_plot_dfbetas(fit)
