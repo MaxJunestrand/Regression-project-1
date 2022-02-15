@@ -121,3 +121,34 @@ library(olsrr)
 ols_plot_cooksd_bar(fit)
 ols_plot_dffits(fit)
 ols_plot_dfbetas(fit)
+
+# Split the data into training and test set
+install.packages('tidyverse')
+install.packages('caret')
+library(tidyverse)
+library(caret)
+set.seed(123)
+MSE <- function(d) {
+  training.samples <- d$density %>%
+    createDataPartition(p = 0.8, list = FALSE)
+  train.data  <- d[training.samples, ]
+  test.data <- d[-training.samples, ]
+  # Build the model
+  model <- lm(density ~., data = train.data)
+  # Make predictions and compute the R2, RMSE and MAE
+  predictions <- model %>% predict(test.data)
+  return(data.frame( R2 = R2(predictions, test.data$density),
+              RMSE = RMSE(predictions, test.data$density),
+              MAE = MAE(predictions, test.data$density)))
+}
+
+mse <- MSE(data[ , !(names(data) %in% c("residuals", "r.student", "predicted"))])
+d <- d[-unique(inf.points), ]
+data <- read.csv(file = "bodyfatmen.csv")
+mse2 <- MSE(data)
+# There is no need to remove outliers, based on what I will write. 
+# but it would lower the RMSE a bit.
+
+
+
+
